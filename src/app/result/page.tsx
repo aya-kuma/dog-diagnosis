@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -68,7 +68,7 @@ const dogBreeds: Record<string, DogBreed> = {
   }
 };
 
-export default function ResultPage() {
+function ResultContent() {
   const searchParams = useSearchParams();
   const [result, setResult] = useState<DogBreed | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -329,5 +329,26 @@ export default function ResultPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-400 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-yellow-300 to-pink-300 rounded-full opacity-30 animate-bounce"></div>
+          <div className="absolute top-32 right-20 w-24 h-24 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full opacity-40 animate-pulse"></div>
+          <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-gradient-to-r from-green-300 to-blue-300 rounded-full opacity-35 animate-bounce" style={{animationDelay: '1s'}}></div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="animate-spin rounded-full h-20 w-20 border-4 border-white border-t-pink-600 mx-auto mb-6"></div>
+          <h2 className="text-3xl font-black text-white mb-4 drop-shadow-lg">🎉 ページを読み込み中... 🎉</h2>
+          <p className="text-xl text-white font-semibold drop-shadow-md">少々お待ちください ✨</p>
+        </div>
+      </div>
+    }>
+      <ResultContent />
+    </Suspense>
   );
 }
